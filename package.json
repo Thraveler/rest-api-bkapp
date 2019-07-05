@@ -1,0 +1,25 @@
+{
+  "name": "rest-api-bkapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./bin/www"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Thraveler/rest-api-bkapp.git"
+  },
+  "author": "Daniel Méndez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Thraveler/rest-api-bkapp/issues"
+  },
+  "homepage": "https://github.com/Thraveler/rest-api-bkapp#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.6.2",
+    "nodemon": "^1.19.1"
+  }
+}
