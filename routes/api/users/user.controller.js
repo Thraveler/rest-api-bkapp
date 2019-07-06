@@ -18,7 +18,17 @@ function createUser() {
 
 }
 
+function getUser(idUser) {
+  return UserModel.findById(idUser).exec();
+}
+
+function deleteUser(idUser) {
+  return UserModel.findByIdAndRemove(idUser).exec();
+}
+
 module.exports = {
   getUsers,
-  createUser
+  createUser,
+  getUser,
+  deleteUser
 }
