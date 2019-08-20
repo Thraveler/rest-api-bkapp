@@ -20,8 +20,8 @@ router.get('/users', (req, res) => {
 // POST
 router.post('/users', (req, res) => {
 
-	userController.createUser()
-		.then(user => {
+	userController.createUser(req.body)
+	.then(user => {
 			res.status(201).json(user);
 		})
 		.catch(err => {
@@ -35,7 +35,6 @@ router.post('/users', (req, res) => {
 */
 
 // GET
-
 router.get('/users/:idUser', (req, res) => {
 
 	let userId = req.params.idUser;
@@ -68,11 +67,22 @@ router.delete('/users/:idUser', (req, res) => {
 });
 
 // PATCH
-router.patch('/users/:id', (req, res) => {
+router.put('/users/:idUser', (req, res) => {
+	let userId = req.params.idUser;
 
-	res.status(200).json({
-		message: 'PATCH to /users/' + req.params.id
-	});
+	let user = {
+		username: req.body.username,
+		name: req.body.name,
+		lastName: req.body.lastName,
+		email: req.body.email,
+		age: req.body.age
+	}
+
+	userController.updateUser(userId, user)
+		.then(updated => {
+			res.status(204).json(updated);
+		})
+		.catch();
 
 });
 

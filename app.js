@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const cors = require('cors');
 
 // Database connection
 mongoose.connect(
@@ -23,6 +24,12 @@ app.use(morgan('dev'));
 // Traduce cuerpo de peticiones http
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+
+// Permite pruebas locales
+app.use(cors());
+
+// Configura la carpeta uploads como ruta estatica
+app.use('/uploads', express.static('uploads'));
 
 // Configurando rutas
 const apiRoutes = require('./routes/api/api');

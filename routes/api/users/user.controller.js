@@ -2,16 +2,23 @@ const UserModel = require('./user.model');
 const mongoose = require('mongoose');
 
 function getUsers() {
-  return UserModel.find().exec();
+  return UserModel
+    .find()
+    .select(
+      'username name lastName email age'
+    )
+    .exec();
 }
 
-function createUser() {
+function createUser(userReceived) {
   
   const user = new UserModel({
     _id: mongoose.Types.ObjectId(),
-    name: 'User',
-    lastName: '1',
-    age: 23
+    username: userReceived.username,
+    name: userReceived.name,
+    lastName: userReceived.lastName,
+    email: userReceived.email,
+    age: userReceived.age
   });
 
   return user.save();
@@ -19,16 +26,26 @@ function createUser() {
 }
 
 function getUser(idUser) {
-  return UserModel.findById(idUser).exec();
+  return UserModel
+    .findById(idUser)
+    .select(
+      'username name lastName email age'
+    )
+    .exec();
 }
 
 function deleteUser(idUser) {
   return UserModel.findByIdAndRemove(idUser).exec();
 }
 
+function updateUser(idUser, userUpdated) {
+  return UserModel.findByIdAndUpdate(idUser, userUpdated).exec();
+}
+
 module.exports = {
   getUsers,
   createUser,
   getUser,
-  deleteUser
+  deleteUser,
+  updateUser
 }
