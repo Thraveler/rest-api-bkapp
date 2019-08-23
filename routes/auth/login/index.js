@@ -23,7 +23,10 @@ router.post('/signup', (req, res) => {
 
     account.save()
       .then(account => {
-        res.status(201).json(account);
+        res.status(201).json({
+          message: "User created",
+          code: 201
+        });
       })
       .catch(err => {
         res.status(500).json({error: err});
@@ -47,7 +50,11 @@ router.post('/login', (req, res) => {
       if(err) res.status(500).json({error: err});
 
       if(result) {
-        res.status(200).json({ message: 'You are login', code: 200 });
+        res.status(200).json({ 
+          message: 'You are login', 
+          code: 200,
+          userId: user._id
+        });
       } else {
         res.status(200).json({message: 'Auth error not match'});
       }

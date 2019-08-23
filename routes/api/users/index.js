@@ -72,15 +72,18 @@ router.put('/users/:idUser', (req, res) => {
 
 	let user = {
 		username: req.body.username,
-		name: req.body.name,
-		lastName: req.body.lastName,
-		email: req.body.email,
-		age: req.body.age
+		name: req.body.name || "",
+		lastName: req.body.lastName || "",
+		email: req.body.email || "",
+		age: req.body.age || 0
 	}
 
 	userController.updateUser(userId, user)
 		.then(updated => {
-			res.status(204).json(updated);
+			res.status(201).json({
+				message: "Datos actualizados",
+				code: 200
+			});
 		})
 		.catch();
 
