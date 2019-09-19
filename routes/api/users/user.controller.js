@@ -5,7 +5,7 @@ function getUsers() {
   return UserModel
     .find()
     .select(
-      'username name lastName email age'
+      'username name lastName email age numberPhone profileImage'
     )
     .exec();
 }
@@ -18,7 +18,8 @@ function createUser(userReceived) {
     name: userReceived.name,
     lastName: userReceived.lastName,
     email: userReceived.email,
-    age: userReceived.age
+    age: userReceived.age,
+    numberPhone: userReceived.numberPhone
   });
 
   return user.save();
@@ -29,7 +30,7 @@ function getUser(idUser) {
   return UserModel
     .findById(idUser)
     .select(
-      'username name lastName email age'
+      'username name lastName email age numberPhone profileImage'
     )
     .exec();
 }

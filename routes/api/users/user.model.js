@@ -16,6 +16,8 @@ const userSchema = new Schema({
   name: String,
   lastName: String,
   age: Number,
+  numberPhone: Number,
+  profileImage: String
 },
 {
   timestamps: {}

@@ -70,12 +70,15 @@ router.delete('/users/:idUser', (req, res) => {
 router.put('/users/:idUser', (req, res) => {
 	let userId = req.params.idUser;
 
+	console.log(req.body)
+
 	let user = {
 		username: req.body.username,
 		name: req.body.name || "",
 		lastName: req.body.lastName || "",
 		email: req.body.email || "",
-		age: req.body.age || 0
+		age: req.body.age || 0,
+		numberPhone: req.body.numberPhone || 0
 	}
 
 	userController.updateUser(userId, user)

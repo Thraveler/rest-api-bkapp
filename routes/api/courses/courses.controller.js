@@ -5,7 +5,7 @@ function getCourses() {
   return CourseModel
     .find()
     .select( 
-      'courseName information imagePath'
+      'courseName information imagePath profesor duration startDate endDate'
       )
     .exec();
 }
