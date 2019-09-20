@@ -70,8 +70,6 @@ router.delete('/users/:idUser', (req, res) => {
 router.put('/users/:idUser', (req, res) => {
 	let userId = req.params.idUser;
 
-	console.log(req.body)
-
 	let user = {
 		username: req.body.username,
 		name: req.body.name || "",

@@ -53,7 +53,9 @@ router.post('/login', (req, res) => {
         res.status(200).json({ 
           message: 'You are login', 
           code: 200,
-          userId: user._id
+          userId: user._id,
+          username: user.username,
+          email: user.email
         });
       } else {
         res.status(200).json({message: 'Auth error not match'});
