@@ -5,25 +5,40 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
+const http = require('http');
+const FormData = require('form-data')
 
 router.post('/signup', (req, res) => {
 
   const { username, email, password } = req.body;
 
+  let form = new FormData()
+  form.append('em', email);
+  form.append('usr', username);
+  form.append('des', 'yes');
+  form.append('url', '132.248.115.45');
+  form.append('verify', 'X/12p9@#%8uc43r');
+
+  
   bcrypt.hash(password, saltRounds, (err, hash) => {
     
     if(err) res.send(500).json({ error: err});
-
+    
     const account = new userModel({
       _id: mongoose.Types.ObjectId(),
       username: username,
       email: email,
       password: hash
     });
-
+    
     account.save()
-      .then(account => {
-        res.status(201).json({
+    .then(account => {
+      // Se envian datos a servidor para permitir chat en el app
+      form.submit('http://132.248.115.34:80', function(err, res) {
+        if (err) throw err;
+        console.log('Done');
+      });
+      res.status(201).json({
           message: "User created",
           code: 201
         });
