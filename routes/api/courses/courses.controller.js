@@ -27,7 +27,7 @@ function getCourse(idCourse) {
   return CourseModel
     .findById(idCourse)
     .select( 
-      'courseName information imagePath'
+      'courseName information imagePath profesor duration startDate endDate'
       )
     .exec();
 }
