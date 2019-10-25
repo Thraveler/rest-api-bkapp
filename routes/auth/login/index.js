@@ -22,7 +22,11 @@ router.post('/signup', (req, res) => {
   
   bcrypt.hash(password, saltRounds, (err, hash) => {
     
-    if(err) res.send(500).json({ error: err});
+    if(err) res.send(500).json({ 
+      code: 500,
+      message: "Server error",
+      error: err
+    });
     
     const account = new userModel({
       _id: mongoose.Types.ObjectId(),
@@ -34,17 +38,21 @@ router.post('/signup', (req, res) => {
     account.save()
     .then(account => {
       // Se envian datos a servidor para permitir chat en el app
-      form.submit('http://132.248.115.34:80', function(err, res) {
-        if (err) throw err;
-        console.log('Done');
-      });
+      // form.submit('http://132.248.115.34:80', function(err, res) {
+      //   if (err) throw err;
+      //   console.log('Done');
+      // });
       res.status(201).json({
           message: "User created",
           code: 201
         });
       })
       .catch(err => {
-        res.status(500).json({error: err});
+        res.status(500).json({
+          code: 500,
+          message: "Server error",
+          error: err
+        });
       });
   });
 
@@ -56,13 +64,24 @@ router.post('/login', (req, res) => {
   const { username, password } = req.body;
 
   userModel.findOne({username: username}, (err, user) => {
-    if(err) return res.status(500).json({error: err});
+    if(err) return res.status(500).json({
+      code: 500,
+      message: "Server error",
+      error: err
+    });
 
-    if(!user) return res.status(401).json({ message: 'Auth error doesnt exist user' });
+    if(!user) return res.status(401).json({ 
+      code: 401,
+      message: 'Auth error doesnt exist user' 
+    });
 
     bcrypt.compare(password, user.password, (err, result) => {
 
-      if(err) res.status(500).json({error: err});
+      if(err) res.status(500).json({
+        // code: 500,
+        message: "Server error",
+        error: err
+      });
 
       if(result) {
         res.status(200).json({ 
@@ -73,7 +92,11 @@ router.post('/login', (req, res) => {
           email: user.email
         });
       } else {
-        res.status(200).json({message: 'Auth error not match'});
+        res.status(401).json({
+          code: 401,
+          message: "Server error",
+          message: 'Auth error not match'
+        });
       }
     });
   });
