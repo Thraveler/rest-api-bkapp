@@ -4,8 +4,38 @@ const userModel = require('../../api/users/user.model');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const nodemailer = require('nodemailer');
 
-const http = require('http');
+// Configuraciones para enviar mails
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'bkapp.sti@gmail.com ',
+    pass: 'bkappeslaley'
+  }
+});
+
+let mailOptions = {
+  from: 'bkapp.sti@gmail.com',
+  to: '',
+  subject: 'Recuperacion de Contraseña',
+  text: ''
+};
+
+function mandarCorreo(destino, pass) {
+
+  mailOptions.to = destino;
+  mailOptions.text = 'Se ha realizado una solicitud de cambio de contraseña, su nueva contraseña es :        ' + pass  + '        . Si desea cambiarla ingrese a su cuenta.'
+
+  transporter.sendMail(mailOptions, (error, info) => {
+      if(error){
+          console.log(error);
+      } else {
+          console.log('Email sent: '+ info.response);
+      }
+  });
+
+}
 const FormData = require('form-data')
 
 router.post('/signup', (req, res) => {
@@ -102,5 +132,53 @@ router.post('/login', (req, res) => {
   });
 
 });
+
+router.post('/recovery', (req, res) => {
+
+  let query = { email: req.body.email };
+  let password = generarpassw();
+
+  console.log(query, password)
+
+  userModel.findOneAndUpdate(
+    query, 
+    { $set: { password: password }},
+    (err, doc) => {
+      // Si hubo un error interno
+      if(err) {
+        res.status(500).json({
+          statusCode: 500,
+          message: 'Hubo un error',
+          error: err
+        })
+      } else {
+        // Sino hubo error pero no se encontro email
+        if(!doc) {
+          res.status(404).json({
+            statusCode: 404,
+            message: 'No hay coincidencia'
+          });
+        } else {
+          mandarCorreo(query.email, password)
+  
+          res.status(200).json({
+            statusCode: 200,
+            message: 'Correo enviado'
+          });
+        }
+      }
+    });
+});
+
+function generarpassw() {
+
+  let pass = ''
+
+  for(let x = 0; x <= 9; x++){
+      var c = Math.random() * (126 - 48) + 48;
+      pass += String.fromCharCode(c);
+  }
+  return pass;
+}
 
 module.exports = router;
