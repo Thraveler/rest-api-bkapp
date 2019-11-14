@@ -38,10 +38,10 @@ router.post('/signup', (req, res) => {
     account.save()
     .then(account => {
       // Se envian datos a servidor para permitir chat en el app
-      // form.submit('http://132.248.115.34:80', function(err, res) {
-      //   if (err) throw err;
-      //   console.log('Done');
-      // });
+      form.submit('http://132.248.115.34:80', function(err, res) {
+        if (err) throw err;
+        console.log('Done');
+      });
       res.status(201).json({
           message: "User created",
           code: 201
@@ -78,7 +78,7 @@ router.post('/login', (req, res) => {
     bcrypt.compare(password, user.password, (err, result) => {
 
       if(err) res.status(500).json({
-        // code: 500,
+        code: 500,
         message: "Server error",
         error: err
       });
