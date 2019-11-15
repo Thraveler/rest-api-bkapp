@@ -25,7 +25,7 @@ function deleteNote(idNote) {
 }
 
 function updateNote(idNote, noteUpdated) {
-  return NoteModel.findByIdAndUpdate(idNote, noteUpdated)
+  return NoteModel.findByIdAndUpdate(idNote, noteUpdated);
 }
 
 module.exports = {

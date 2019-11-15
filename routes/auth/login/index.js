@@ -179,6 +179,93 @@ router.post('/recovery', (req, res) => {
 
 });
 
+router.post('/updatePassword', (req, res) => {
+
+  let { email, password, newPassword } = req.body;
+
+  // Se busca el usuario en base al email
+  userModel.findOne(
+    { email: email },
+    (err, user) => {
+
+      // Si da error interno
+      if(err) return res.status(500).json({
+        code: 500,
+        message: "Server error",
+        error: err
+      });
+  
+      // Sino se encontro el usuario
+      if(!user) return res.status(401).json({ 
+        code: 401,
+        message: 'Auth error doesnt exist user' 
+      });
+
+      // Se comparan contraseñas antes de hacer cambios
+      bcrypt.compare(password, user.password, (err, result) => {
+
+        // Error interno
+        if(err) res.status(500).json({
+          code: 500,
+          message: "Server error",
+          error: err
+        });
+  
+        // Si las contraseñas son iguales se actualiza
+        if(result) {
+          
+          bcrypt.hash(newPassword, saltRounds, (err, hash) => {
+
+            if(err) res.send(500).json({ 
+              code: 500,
+              message: "Error mientras se generaba contraseña.",
+              error: err
+            });
+            
+            userModel.findOneAndUpdate(
+              { email: email }, 
+              { $set: { password: hash }},
+              (err, doc) => {
+                // Si hubo un error interno
+                if(err) {
+                  res.status(500).json({
+                    statusCode: 500,
+                    message: 'Hubo un error al actualizar contraseña',
+                    error: err
+                  })
+                } else {
+                  // Sino hubo error pero no se encontro email
+                  if(!doc) {
+                    res.status(404).json({
+                      statusCode: 404,
+                      message: 'No hay coincidencia'
+                    });
+                  } else {
+                    mandarCorreo(email, newPassword)
+            
+                    res.status(200).json({
+                      statusCode: 200,
+                      message: 'Correo enviado'
+                    });
+                  }
+                }
+              });
+        
+          });
+
+        } else {
+          res.status(401).json({
+            code: 401,
+            message: "Server error",
+            message: 'Auth error not match'
+          });
+        }
+      });
+
+    });
+
+});
+
 function generarpassw() {
 
   let pass = ''
