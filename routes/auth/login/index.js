@@ -138,36 +138,45 @@ router.post('/recovery', (req, res) => {
   let query = { email: req.body.email };
   let password = generarpassw();
 
-  console.log(query, password)
+  bcrypt.hash(password, saltRounds, (err, hash) => {
 
-  userModel.findOneAndUpdate(
-    query, 
-    { $set: { password: password }},
-    (err, doc) => {
-      // Si hubo un error interno
-      if(err) {
-        res.status(500).json({
-          statusCode: 500,
-          message: 'Hubo un error',
-          error: err
-        })
-      } else {
-        // Sino hubo error pero no se encontro email
-        if(!doc) {
-          res.status(404).json({
-            statusCode: 404,
-            message: 'No hay coincidencia'
-          });
-        } else {
-          mandarCorreo(query.email, password)
-  
-          res.status(200).json({
-            statusCode: 200,
-            message: 'Correo enviado'
-          });
-        }
-      }
+    if(err) res.send(500).json({ 
+      code: 500,
+      message: "Error mientras se generaba contraseña.",
+      error: err
     });
+    
+    userModel.findOneAndUpdate(
+      query, 
+      { $set: { password: hash }},
+      (err, doc) => {
+        // Si hubo un error interno
+        if(err) {
+          res.status(500).json({
+            statusCode: 500,
+            message: 'Hubo un error al actualizar contraseña',
+            error: err
+          })
+        } else {
+          // Sino hubo error pero no se encontro email
+          if(!doc) {
+            res.status(404).json({
+              statusCode: 404,
+              message: 'No hay coincidencia'
+            });
+          } else {
+            mandarCorreo(query.email, password)
+    
+            res.status(200).json({
+              statusCode: 200,
+              message: 'Correo enviado'
+            });
+          }
+        }
+      });
+
+  });
+
 });
 
 function generarpassw() {
