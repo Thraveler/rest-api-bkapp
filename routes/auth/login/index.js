@@ -95,20 +95,20 @@ router.post('/login', (req, res) => {
 
   userModel.findOne({username: username}, (err, user) => {
     if(err) return res.status(500).json({
-      code: 500,
+      statusCode: 500,
       message: "Server error",
       error: err
     });
 
     if(!user) return res.status(401).json({ 
-      code: 401,
+      statusCode: 401,
       message: 'Auth error doesnt exist user' 
     });
 
     bcrypt.compare(password, user.password, (err, result) => {
 
       if(err) res.status(500).json({
-        code: 500,
+        statusCode: 500,
         message: "Server error",
         error: err
       });
@@ -116,14 +116,14 @@ router.post('/login', (req, res) => {
       if(result) {
         res.status(200).json({ 
           message: 'You are login', 
-          code: 200,
+          statusCode: 200,
           userId: user._id,
           username: user.username,
           email: user.email
         });
       } else {
         res.status(401).json({
-          code: 401,
+          statusCode: 401,
           message: "Server error",
           message: 'Auth error not match'
         });
