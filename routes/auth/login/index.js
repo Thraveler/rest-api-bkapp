@@ -245,7 +245,7 @@ router.post('/updatePassword', (req, res) => {
             
                     res.status(200).json({
                       statusCode: 200,
-                      message: 'Correo enviado'
+                      message: 'Contraseña actualizada'
                     });
                   }
                 }
