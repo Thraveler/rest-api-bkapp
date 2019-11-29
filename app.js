@@ -8,7 +8,10 @@ const cors = require('cors');
 // Database connection
 mongoose.connect(
 		'mongodb://localhost:27017/bkapp', 
-		{useNewUrlParser: true},
+		{
+			useNewUrlParser: true,
+			useCreateIndex: true
+		},
 		(err) => {
 			if(err) {
 				console.error(err);
