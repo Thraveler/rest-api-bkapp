@@ -69,8 +69,13 @@ router.post('/signup', (req, res) => {
     .then(account => {
       // Se envian datos a servidor para permitir chat en el app
       form.submit('http://132.248.115.34:80', function(err, res) {
-        if (err) throw err;
-        console.log('Done');
+        if (err) {
+          console.log("Error externo");
+          res.status(500).json({
+            message: "Server error",
+            code: 500,
+          });
+        }
       });
       res.status(201).json({
           message: "User created",
